@@ -34,13 +34,16 @@ def run_query_df(query):
 
 # --- Initial Data Load (Top Artists) ---
 def get_top_artists():
+    # Fetch all artists who have had a sale in the last 4 years
     query = """
-    SELECT creator, count() as c 
-    FROM sothebys.lots 
-    WHERE creator != '' 
-    GROUP BY creator 
-    ORDER BY c DESC 
-    LIMIT 50
+    SELECT DISTINCT l.creator
+    FROM sothebys.sales s
+    JOIN sothebys.lots l ON s.lot_uuid = l.lot_uuid
+    JOIN sothebys.auctions a ON l.auction_uuid = a.auction_uuid
+    WHERE s.is_sold = 1
+      AND toDate(a.date_closed) >= now() - INTERVAL 4 YEAR
+      AND l.creator != ''
+    ORDER BY l.creator ASC
     """
     df = run_query_df(query)
     if not df.empty:
