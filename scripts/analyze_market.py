@@ -1,6 +1,10 @@
 import requests
 import sys
+import os
 import urllib3
+
+# Add parent directory to path to find db_config
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from db_config import BASE_URL, HEADERS
 
 urllib3.disable_warnings()

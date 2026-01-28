@@ -1,16 +1,18 @@
 # %% [markdown]
 # # Bloomsbury Tech Market Analysis (Zed REPL Mode)
 
-import sys
-from io import StringIO
-
-import pandas as pd
 import requests
+import pandas as pd
 import urllib3
+from io import StringIO
+import sys
+import os
 
-# Add current directory to path to find db_config
-sys.path.append(".")
+# Add parent directory to path to find db_config
+sys.path.append(os.path.abspath('..'))
+sys.path.append(os.path.abspath('.'))
 from db_config import BASE_URL, HEADERS
+
 
 urllib3.disable_warnings()
 

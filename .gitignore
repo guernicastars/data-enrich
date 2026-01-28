@@ -1,0 +1,7 @@
+__pycache__/
+.ipynb_checkpoints/
+.clickhouse-url
+.DS_Store
+.idea/
+.vscode/
+*.pyc

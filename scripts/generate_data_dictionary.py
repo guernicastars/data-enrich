@@ -1,7 +1,11 @@
 import requests
 import sys
+import os
 import json
 import datetime
+
+# Add parent directory to path to find db_config
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from db_config import BASE_URL, HEADERS
 
 TARGET_DBS = [

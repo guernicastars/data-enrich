@@ -39,9 +39,9 @@ This repository contains the tools and scripts used to explore, enrich, and anal
     ```
 
 3.  **Run Analysis:**
-    *   **CLI:** `python3 analyze_market.py`
-    *   **Zed:** Open `market_analysis_zed.py` and press `Shift+Enter` to run cells.
-    *   **Jupyter:** `jupyter notebook market_analysis.ipynb`
+    *   **CLI:** `python3 scripts/analyze_market.py`
+    *   **Zed:** Open `notebooks/market_analysis_zed.py` and press `Shift+Enter` to run cells.
+    *   **Jupyter:** `jupyter notebook notebooks/market_analysis.ipynb`
 
 ## 📊 Key Insights (Sample)
 
@@ -51,11 +51,18 @@ This repository contains the tools and scripts used to explore, enrich, and anal
 
 ## 📂 File Structure
 
-*   `analyze_market.py`: Main reporting script.
-*   `market_analysis_zed.py`: Interactive script for Zed Editor.
-*   `market_analysis.ipynb`: Jupyter Notebook version.
-*   `inspect_data.py`: Utility to peek at table schemas and sample rows.
-*   `explore_clickhouse.py`: Connection connectivity test.
+*   `scripts/`:
+    *   `analyze_market.py`: Main reporting script.
+    *   `generate_data_dictionary.py`: Generates the `DATA_DICTIONARY.md` report.
+    *   `inspect_data.py`: Utility to peek at table schemas and sample rows.
+    *   `explore_clickhouse.py`: Connection connectivity test.
+*   `notebooks/`:
+    *   `market_analysis_zed.py`: Interactive script for Zed Editor.
+    *   `market_analysis.ipynb`: Jupyter Notebook version.
+*   `docs/`:
+    *   `DATA_DICTIONARY.md`: Detailed descriptive analysis of all tables and columns.
+    *   `session_log.md`: Transcript of the setup session.
+*   `db_config.py`: Database connection configuration.
 *   `pyproject.toml`: Configuration for Python tooling (Ruff, Pyright).
 
 ---

@@ -1,17 +1,10 @@
 import requests
 import sys
+import os
 
-# Configuration derived from the provided JDBC URL
-HOST = "qgu31sw9py.germanywestcentral.azure.clickhouse.cloud"
-PORT = "8443"
-USER = "default"
-PASSWORD = "PKR4cvT.xwH9k"
-BASE_URL = f"https://{HOST}:{PORT}/"
-
-HEADERS = {
-    'X-ClickHouse-User': USER,
-    'X-ClickHouse-Key': PASSWORD
-}
+# Add parent directory to path to find db_config
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from db_config import BASE_URL, HEADERS
 
 def run_query(query):
     print(f"Running query: {query}")
