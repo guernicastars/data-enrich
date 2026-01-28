@@ -13,8 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the current directory contents into the container at /app
 COPY . .
 
-# Expose port 8501 for Streamlit
-EXPOSE 8501
+# Expose port 8050 for Dash
+EXPOSE 8050
 
 # Run the application
-CMD ["streamlit", "run", "scripts/market_dashboard.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["python3", "scripts/market_dashboard_dash.py"]

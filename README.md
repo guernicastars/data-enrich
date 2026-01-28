@@ -11,6 +11,11 @@ This repository contains the tools and scripts used to explore, enrich, and anal
     *   Top 10 most expensive lots (normalized to USD).
     *   Top 10 artists by sales volume.
     *   Correlation between artwork size and price.
+*   **Interactive Dashboard:** A production-grade **Plotly Dash** application (`scripts/market_dashboard_dash.py`) featuring:
+    *   Artist filtering.
+    *   Real-time KPI aggregation.
+    *   Interactive price trend scatter plots.
+    *   Sortable data grids.
 *   **Zed Editor Integration:** Includes `market_analysis_zed.py` formatted with `# %%` cells for interactive REPL-style analysis directly within Zed.
 *   **Jupyter Support:** Standard `market_analysis.ipynb` for traditional data science workflows.
 *   **Production Standards:** Configured with `pyproject.toml` for `ruff` (linting/formatting) and `basedpyright` (type checking).
@@ -19,7 +24,7 @@ This repository contains the tools and scripts used to explore, enrich, and anal
 
 1.  **Install Dependencies:**
     ```bash
-    pip install requests pandas ruff basedpyright
+    pip install -r requirements.txt
     ```
 
 2.  **Configure Credentials:**
@@ -39,6 +44,7 @@ This repository contains the tools and scripts used to explore, enrich, and anal
     ```
 
 3.  **Run Analysis:**
+    *   **Dashboard:** `python3 scripts/market_dashboard_dash.py` (Access at http://localhost:8050)
     *   **CLI:** `python3 scripts/analyze_market.py`
     *   **Zed:** Open `notebooks/market_analysis_zed.py` and press `Shift+Enter` to run cells.
     *   **Jupyter:** `jupyter notebook notebooks/market_analysis.ipynb`
