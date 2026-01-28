@@ -1,0 +1,15 @@
+.git
+.idea
+__pycache__
+*.pyc
+.DS_Store
+.env
+.env.local
+venv
+env
+.venv
+.anaconda
+anaconda3
+miniconda3
+node_modules
+.gemini-clipboard
