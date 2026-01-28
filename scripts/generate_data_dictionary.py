@@ -54,18 +54,38 @@ def analyze_table(db, table, file_handle):
 
     columns = get_columns(db, table)
     
-    file_handle.write("| Column | Type | Fill Rate | Unique Vals | Min | Max |\n")
-    file_handle.write("| :--- | :--- | :--- | :--- | :--- | :--- |\n")
+    # Updated Header with 'Top Values / Avg'
+    file_handle.write("| Column | Type | Fill Rate | Unique Vals | Min | Max | Top Values / Avg |\n")
+    file_handle.write("| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n")
 
     for col in columns:
         col_name = col['name']
         col_type = col['type']
         
         min_max_sql = "NULL, NULL"
-        if 'Int' in col_type or 'Float' in col_type or 'Date' in col_type:
+        extra_sql = "NULL" # For avg or topK
+        
+        is_numeric = 'Int' in col_type or 'Float' in col_type
+        is_string = 'String' in col_type
+        
+        if is_numeric or 'Date' in col_type:
             min_max_sql = f"min({col_name}), max({col_name})"
+        
+        if is_numeric:
+            extra_sql = f"avg({col_name})"
+        elif is_string:
+            # ClickHouse topK returns an array of values
+            extra_sql = f"topK(3)({col_name})"
 
-        query_stats = f"SELECT count({col_name}) as populated, uniq({col_name}) as distinct_count, {min_max_sql} FROM {db}.{table} FORMAT JSON"
+        query_stats = f"""
+        SELECT 
+            count({col_name}) as populated, 
+            uniq({col_name}) as distinct_count, 
+            {min_max_sql},
+            {extra_sql} as extra_stat
+        FROM {db}.{table} 
+        FORMAT JSON
+        """
         
         stats_raw = run_query(query_stats)
         if stats_raw:
@@ -75,25 +95,44 @@ def analyze_table(db, table, file_handle):
                 distinct = stats['distinct_count']
                 val_min = stats.get(f"min({col_name})")
                 val_max = stats.get(f"max({col_name})")
+                extra_val = stats.get('extra_stat')
                 
                 fill_rate = f"{(populated / row_count) * 100:.1f}%"
                 
                 str_min = str(val_min) if val_min is not None else "-"
                 str_max = str(val_max) if val_max is not None else "-"
                 
+                # Truncate min/max
                 if len(str_min) > 20: str_min = str_min[:17] + "..."
                 if len(str_max) > 20: str_max = str_max[:17] + "..."
 
-                file_handle.write(f"| `{col_name}` | {col_type} | {fill_rate} | {distinct:,} | {str_min} | {str_max} |\n")
+                # Format Extra Stat
+                str_extra = "-"
+                if extra_val is not None:
+                    if is_numeric:
+                        # It's an average
+                        try:
+                            str_extra = f"Avg: {float(extra_val):.2f}"
+                        except:
+                            str_extra = f"Avg: {extra_val}"
+                    elif isinstance(extra_val, list):
+                        # It's topK list
+                        # Escape pipes | to avoid breaking markdown table
+                        clean_vals = [str(v).replace("|", "/") for v in extra_val]
+                        # Truncate very long strings in the list
+                        clean_vals = [v[:15] + "..." if len(v) > 15 else v for v in clean_vals]
+                        str_extra = ", ".join(clean_vals)
+
+                file_handle.write(f"| `{col_name}` | {col_type} | {fill_rate} | {distinct:,} | {str_min} | {str_max} | {str_extra} |\n")
             except Exception:
-                file_handle.write(f"| `{col_name}` | {col_type} | Error | - | - | - |\n")
+                file_handle.write(f"| `{col_name}` | {col_type} | Error | - | - | - | - |\n")
         else:
-             file_handle.write(f"| `{col_name}` | {col_type} | - | - | - | - |\n")
+             file_handle.write(f"| `{col_name}` | {col_type} | - | - | - | - | - |\n")
 
     file_handle.write("\n---\n\n")
 
 def main():
-    with open("DATA_DICTIONARY.md", "w") as f:
+    with open("docs/DATA_DICTIONARY.md", "w") as f:
         f.write("# Bloomsbury Tech Data Dictionary\n\n")
         f.write(f"Generated on: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
         
@@ -107,7 +146,7 @@ def main():
             for table in tables:
                 analyze_table(db, table, f)
 
-    print("\nAnalysis Complete. Results saved to DATA_DICTIONARY.md")
+    print("\nAnalysis Complete. Results saved to docs/DATA_DICTIONARY.md")
 
 if __name__ == "__main__":
     main()
