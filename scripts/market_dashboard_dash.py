@@ -26,7 +26,7 @@ def run_query_df(query):
         full_query = query + " FORMAT CSVWithNames"
         response = requests.post(BASE_URL, headers=HEADERS, data=full_query.encode('utf-8'))
         response.raise_for_status()
-        return pd.read_csv(StringIO(response.text), na_values=['\N'])
+        return pd.read_csv(StringIO(response.text), na_values=['\\N'])
     except Exception as e:
         print(f"Database Error: {e}")
         return pd.DataFrame()
