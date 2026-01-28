@@ -31,8 +31,29 @@ To ensure a high-velocity, professional development experience, we configured:
 - **Jupyter Support:** Developed `market_analysis.ipynb` for traditional data science visualization.
 - **Code Quality:** Added `pyproject.toml` to automate linting via **Ruff** and type-checking via **basedpyright**.
 
-## 5. Repository Finalization
-The project was initialized as a Git repository with a clear `README.md`, documenting the features, setup, and key insights for the YC session.
+## 5. Dashboard Evolution (Dash & Vercel)
+We migrated from a basic script to a production-grade web application:
+- **Framework Choice:** Selected **Dash (Plotly)** over Streamlit for finer UI control and custom styling.
+- **Advanced Analytics:** Integrated three key new metrics into the UI:
+    - **Bidding Intensity:** Visualization of bid competition vs. price realization.
+    - **Valuation Economics:** Log-Log scatter plot of Brand vs. Scale.
+    - **Data Pipeline Health:** Monitoring AI extraction confidence scores.
+- **Global Search:** Expanded the artist filter to support **all 4,397 artists** sold in the last 4 years, rather than just the top 50.
+
+## 6. Production Deployment
+The application was successfully deployed to the public web:
+- **Platform:** Vercel (Serverless Python Runtime).
+- **Domain:** [dashboard.bloomsburytech.com](https://dashboard.bloomsburytech.com)
+- **Configuration:**
+    - Created `wsgi.py` entry point for Gunicorn/Vercel compatibility.
+    - Optimized `requirements.txt` to <50MB by removing heavy data science libraries (scipy, sklearn) to meet serverless limits.
+    - Configured secure Environment Variables for database credentials.
+    - Set up custom `CNAME` records for white-label domain mapping.
+
+## 7. Ukrainian Art Discovery
+Using the new search capabilities, we identified key Ukrainian heritage artists in the dataset:
+- **Classic/Modern:** Alexander Archipenko, Sonia Delaunay, Louise Nevelson, Mané-Katz.
+- **Contemporary:** Ivan Marchuk, Ivan Turetskyy, Zhanna Kadyrova.
 
 ---
 *End of Session.*
